@@ -42,7 +42,10 @@ def main():
     for coffee in file_content:
         name = coffee["Name"]
         coordinates = coffee["geoData"]["coordinates"]
-        distancer = distance.distance((lat, lon), (coordinates[1], coordinates[0])).km
+        distancer = distance.distance(
+            (lat, lon),
+            (coordinates[1], coordinates[0])
+        ).km
         generate_coffee.append({
             "title": name,
             "distance": distancer,
@@ -50,7 +53,10 @@ def main():
             "longitude": coordinates[0]
         })
 
-    nearest_coffee = sorted(generate_coffee, key=lambda coffee: coffee["distance"])
+    nearest_coffee = sorted(
+        generate_coffee,
+        key=lambda coffee: coffee["distance"]
+    )
     five_nearest_coffee = nearest_coffee[:5]
 
     for marker in five_nearest_coffee:
