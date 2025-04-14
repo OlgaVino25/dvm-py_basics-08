@@ -5,10 +5,6 @@ from dotenv import load_dotenv
 from geopy import distance
 import folium
 
-with open("coffee.json", "r", encoding="CP1251") as my_file:
-    file_contents = my_file.read()
-file_content = json.loads(file_contents)
-
 
 def fetch_coordinates(apikey, address):
     base_url = "https://geocode-maps.yandex.ru/1.x"
@@ -29,6 +25,10 @@ def fetch_coordinates(apikey, address):
 
 
 def main():
+    with open("coffee.json", "r", encoding="CP1251") as my_file:
+        file_contents = my_file.read()
+
+    file_content = json.loads(file_contents)
     load_dotenv()
     apikey = os.getenv("APIKEY")
     city_user = input("Где вы находитесь? ")
