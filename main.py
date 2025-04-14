@@ -3,7 +3,6 @@ import requests
 import os
 from dotenv import load_dotenv
 from geopy import distance
-from pprint import pprint
 import folium
 
 with open("coffee.json", "r", encoding="CP1251") as my_file:
@@ -30,20 +29,20 @@ def fetch_coordinates(apikey, address):
 
 
 def main():
-    m = folium.Map(location=(55.753544, 37.621202), zoom_start=10)
-
     load_dotenv()
     apikey = os.getenv("APIKEY")
     city_user = input("Где вы находитесь? ")
     coords_user = fetch_coordinates(apikey, f"{city_user}")
-    print(f"Ваши координаты: {coords_user}")
+    lon, lat = float(coords_user[0]), float(coords_user[1])
+
+    m = folium.Map(location=(lat, lon), zoom_start=12)
 
     generate_coffee = []
 
     for coffee in file_content:
         name = coffee["Name"]
         coordinates = coffee["geoData"]["coordinates"]
-        distancer = distance.distance(coords_user, coordinates).km
+        distancer = distance.distance((lat, lon), (coordinates[1], coordinates[0])).km
         generate_coffee.append({
             "title": name,
             "distance": distancer,
@@ -53,7 +52,6 @@ def main():
 
     nearest_coffee = sorted(generate_coffee, key=lambda coffee: coffee["distance"])
     five_nearest_coffee = nearest_coffee[:5]
-    pprint(five_nearest_coffee, sort_dicts=False)
 
     for marker in five_nearest_coffee:
         folium.Marker(
